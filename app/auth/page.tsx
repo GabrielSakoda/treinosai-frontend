@@ -4,6 +4,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { GoogleIcon } from "@/components/icons/google-icon";
+import { Button } from "@/components/ui/button";
 
 export default function AuthPage() {
   const { data: session, isPending } = authClient.useSession();
@@ -60,14 +61,15 @@ export default function AuthPage() {
           </h2>
 
           {/* Google Sign In Button */}
-          <button
+          <Button
             id="google-sign-in-button"
             onClick={handleGoogleSignIn}
-            className="flex w-full items-center justify-center gap-3 rounded-full bg-white px-6 py-4 text-base font-semibold text-[#333] shadow-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
+            variant="outline"
+            className="flex w-full items-center justify-center gap-3 rounded-full bg-white px-6 py-4 text-base font-semibold text-foreground shadow-lg transition-all duration-200 hover:scale-[1.02] hover:bg-white hover:shadow-xl active:scale-[0.98]"
           >
             <GoogleIcon className="h-5 w-5 shrink-0" />
             Fazer login com Google
-          </button>
+          </Button>
 
           {/* Copyright */}
           <p className="text-center text-xs text-white/70">
