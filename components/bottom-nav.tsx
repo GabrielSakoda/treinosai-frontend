@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { House, CalendarDays, Sparkles, BarChart3, User } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { useTransition } from "react";
+import { House, CalendarDays, Sparkles, BarChart3, User, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { getTodayWorkoutPath } from "@/app/_actions/workout";
 
 const NAV_ITEMS = [
   { icon: House, href: "/", label: "Home" },
-  { icon: CalendarDays, href: "#", label: "Agenda" },
+  { icon: CalendarDays, href: "#calendar", label: "Agenda" },
   { icon: null, href: "#", label: "AI" },
   { icon: BarChart3, href: "#", label: "Estatísticas" },
   { icon: User, href: "#", label: "Perfil" },
@@ -16,9 +18,21 @@ const NAV_ITEMS = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const handleCalendarClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    startTransition(async () => {
+      const path = await getTodayWorkoutPath();
+      if (path && path !== "#") {
+        router.push(path);
+      }
+    });
+  };
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border/40 bg-background/95 backdrop-blur-md">
+    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border/40 bg-background/95 backdrop-blur-md pb-safe">
       <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-4">
         {NAV_ITEMS.map((item) => {
           if (item.icon === null) {
@@ -33,8 +47,33 @@ export function BottomNav() {
             );
           }
 
-          const isActive = pathname === item.href && item.href !== "#";
+          const isCalendar = item.href === "#calendar";
+          // Check if we are on a workout day page for the generic calendar active state
+          const isActive =
+            (pathname === item.href && item.href !== "#" && !isCalendar) ||
+            (isCalendar && pathname.includes("/workout-plans/") && pathname.includes("/days/"));
+          
           const Icon = item.icon;
+
+          if (isCalendar) {
+            return (
+              <button
+                key={item.label}
+                onClick={handleCalendarClick}
+                disabled={isPending}
+                className={cn(
+                  "flex flex-col items-center gap-0.5 text-muted-foreground transition-colors",
+                  isActive && "text-primary"
+                )}
+              >
+                {isPending ? (
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                ) : (
+                  <Icon className="h-6 w-6" strokeWidth={isActive ? 2.5 : 1.5} />
+                )}
+              </button>
+            );
+          }
 
           return (
             <Link

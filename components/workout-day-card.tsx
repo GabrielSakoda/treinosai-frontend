@@ -27,12 +27,14 @@ interface WorkoutDayCardProps {
 
 export function WorkoutDayCard({
   workoutDay,
-  href = "#",
+  href,
   className,
 }: WorkoutDayCardProps) {
+  const targetHref = href ?? `/workout-plans/${workoutDay.workoutPlanId}/days/${workoutDay.id}`;
+
   return (
     <Link
-      href={href}
+      href={targetHref}
       className={cn(
         "relative block overflow-hidden rounded-2xl aspect-[16/10]",
         className

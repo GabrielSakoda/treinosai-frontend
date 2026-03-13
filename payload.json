@@ -1,0 +1,77 @@
+
+{
+  "name": "Plano Foco Total (Mock)",
+  "workoutDays": [
+    {
+      "name": "Treino de SEGUNDA",
+      "weekDay": "MONDAY",
+      "isRest": false,
+      "coverImageUrl": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
+      "estimatedDurationInSeconds": 3600,
+      "exercises": [
+        { "name": "Supino Reto", "order": 0, "sets": 4, "reps": 10, "restTimeInSeconds": 60 }
+      ]
+    },
+    {
+      "name": "Treino de TERÇA",
+      "weekDay": "TUESDAY",
+      "isRest": false,
+      "coverImageUrl": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
+      "estimatedDurationInSeconds": 3600,
+      "exercises": [
+        { "name": "Agachamento Livre", "order": 0, "sets": 4, "reps": 12, "restTimeInSeconds": 90 }
+      ]
+    },
+    {
+      "name": "Treino de QUARTA",
+      "weekDay": "WEDNESDAY",
+      "isRest": false,
+      "coverImageUrl": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
+      "estimatedDurationInSeconds": 3600,
+      "exercises": [
+        { "name": "Puxada Frontal", "order": 0, "sets": 3, "reps": 12, "restTimeInSeconds": 60 }
+      ]
+    },
+    {
+      "name": "Treino de QUINTA",
+      "weekDay": "THURSDAY",
+      "isRest": false,
+      "coverImageUrl": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
+      "estimatedDurationInSeconds": 3600,
+      "exercises": [
+        { "name": "Desenvolvimento", "order": 0, "sets": 4, "reps": 10, "restTimeInSeconds": 60 }
+      ]
+    },
+    {
+      "name": "Treino de SEXTA",
+      "weekDay": "FRIDAY",
+      "isRest": false,
+      "coverImageUrl": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
+      "estimatedDurationInSeconds": 3600,
+      "exercises": [
+        { "name": "Levantamento Terra", "order": 0, "sets": 3, "reps": 8, "restTimeInSeconds": 120 }
+      ]
+    },
+    {
+      "name": "Treino de SÁBADO",
+      "weekDay": "SATURDAY",
+      "isRest": false,
+      "coverImageUrl": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
+      "estimatedDurationInSeconds": 3600,
+      "exercises": [
+        { "name": "Rosca Direta", "order": 0, "sets": 3, "reps": 12, "restTimeInSeconds": 60 }
+      ]
+    },
+    {
+      "name": "Treino de DOMINGO",
+      "weekDay": "SUNDAY",
+      "isRest": false,
+      "coverImageUrl": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
+      "estimatedDurationInSeconds": 3600,
+      "exercises": [
+        { "name": "Tríceps Testa", "order": 0, "sets": 3, "reps": 12, "restTimeInSeconds": 60 }
+      ]
+    }
+  ]
+}
+

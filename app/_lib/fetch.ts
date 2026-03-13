@@ -10,12 +10,11 @@ const getUrl = (contextUrl: string): string => {
   return requestUrl.toString();
 };
 
-const getHeaders = async (headers?: HeadersInit): Promise<HeadersInit> => {
+const getHeaders = async (headers?: HeadersInit): Promise<Headers> => {
   const _cookies = await cookies();
-  return {
-    ...headers,
-    cookie: _cookies.toString(),
-  };
+  const requestHeaders = new Headers(headers);
+  requestHeaders.set("cookie", _cookies.toString());
+  return requestHeaders;
 };
 
 export const customFetch = async <T>(
