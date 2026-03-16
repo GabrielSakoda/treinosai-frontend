@@ -1,13 +1,13 @@
 import { headers } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { Clock, Dumbbell, CalendarDays, Info } from "lucide-react";
+import { Clock, Dumbbell, CalendarDays } from "lucide-react";
 import { authClient } from "@/app/_lib/auth-client";
 import { getWorkoutDay } from "@/app/_lib/api/fetch-generated";
 import { TopBar } from "./_components/top-bar";
 import { WorkoutActions } from "./_components/workout-actions";
+import { ExerciseCard } from "./_components/exercise-card";
 import { BottomNav } from "@/components/bottom-nav";
-import { Button } from "@/components/ui/button";
 
 const WEEKDAY_LABELS: Record<string, string> = {
   MONDAY: "SEGUNDA",
@@ -124,35 +124,7 @@ export default async function WorkoutDayPage({ params }: PageProps) {
 
         <div className="space-y-3">
           {workoutDay.exercises.map((exercise, index) => (
-            <div
-              key={exercise.id}
-              className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4"
-            >
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary">
-                <span className="text-sm font-black text-primary-foreground">
-                  {index + 1}
-                </span>
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <h3 className="truncate font-semibold text-foreground">
-                  {exercise.name}
-                </h3>
-                <p className="mt-0.5 text-sm text-muted-foreground">
-                  {exercise.sets} séries · {exercise.reps} reps
-                  {exercise.restTimeInSeconds > 0 &&
-                    ` · ${exercise.restTimeInSeconds}s descanso`}
-                </p>
-              </div>
-
-              <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0 text-muted-foreground"
-              >
-                <Info className="h-5 w-5" />
-              </Button>
-            </div>
+            <ExerciseCard key={exercise.id} exercise={exercise} index={index} />
           ))}
         </div>
       </div>
