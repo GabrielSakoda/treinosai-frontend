@@ -4,10 +4,12 @@ import {
   Calendar,
   ChartNoAxesColumn,
   UserRound,
+  Sparkles,
 } from "lucide-react";
 import dayjs from "dayjs";
 import { getHomeData } from "@/app/_lib/api/fetch-generated";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface BottomNavProps {
   activePage?: "home" | "calendar" | "stats" | "profile";
@@ -44,17 +46,19 @@ export async function BottomNav({ activePage = "home" }: BottomNavProps) {
           />
         </Link>
       ) : (
-        <button className="p-3">
-          <Calendar
-            className={cn(
-              "size-6",
-              activePage === "calendar"
-                ? "text-foreground"
-                : "text-muted-foreground"
-            )}
-          />
-        </button>
+        <div className="p-3">
+          <Calendar className="size-6 text-muted-foreground" />
+        </div>
       )}
+      <Button
+        asChild
+        size="icon"
+        className="h-14 w-14 rounded-full shadow-lg shadow-primary/30"
+      >
+        <Link href="/ai">
+          <Sparkles className="size-6" />
+        </Link>
+      </Button>
       <Link href="/stats" className="p-3">
         <ChartNoAxesColumn
           className={cn(

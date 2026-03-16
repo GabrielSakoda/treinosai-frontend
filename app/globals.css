@@ -6,6 +6,10 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-streak-start: var(--streak-start);
+  --color-streak-end: var(--streak-end);
+  --color-streak-zero-start: var(--streak-zero-start);
+  --color-streak-zero-end: var(--streak-zero-end);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -48,6 +52,10 @@
 }
 
 :root {
+  --streak-start: oklch(0.75 0.18 55);
+  --streak-end: oklch(0.45 0.22 30);
+  --streak-zero-start: oklch(0.55 0.008 285);
+  --streak-zero-end: oklch(0.35 0.008 285);
   --radius: 0.65rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
@@ -83,6 +91,10 @@
 }
 
 .dark {
+  --streak-start: oklch(0.75 0.18 55);
+  --streak-end: oklch(0.45 0.22 30);
+  --streak-zero-start: oklch(0.45 0.008 285);
+  --streak-zero-end: oklch(0.28 0.008 285);
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
