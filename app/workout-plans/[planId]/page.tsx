@@ -1,10 +1,11 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, Zap, Clock, Dumbbell, CalendarDays } from "lucide-react";
 import { authClient } from "@/app/_lib/auth-client";
-import { getWorkoutPlan } from "@/app/_lib/api/fetch-generated";
+import { getWorkoutPlan, getHomeData, getUserTrainData } from "@/app/_lib/api/fetch-generated";
 import { BottomNav } from "@/components/bottom-nav";
 import { Button } from "@/components/ui/button";
 
@@ -41,8 +42,20 @@ export default async function WorkoutPlanPage({ params }: PageProps) {
 
   if (!session.data?.user) redirect("/auth");
 
+  const today = dayjs();
+  const reqHeaders = await headers();
+
+  const [homeRes, trainRes] = await Promise.all([
+    getHomeData(today.format("YYYY-MM-DD"), { headers: reqHeaders }),
+    getUserTrainData({ headers: reqHeaders }),
+  ]);
+
+  const hasActivePlan = homeRes.status === 200;
+  const hasTrainData = trainRes.status === 200 && trainRes.data !== null;
+  if (!hasActivePlan || !hasTrainData) redirect("/onboarding");
+
   const planResponse = await getWorkoutPlan(planId, {
-    headers: await headers(),
+    headers: reqHeaders,
   });
 
   if (planResponse.status !== 200) {

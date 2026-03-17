@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import dayjs from "dayjs";
 import { authClient } from "@/app/_lib/auth-client";
-import { getHomeData } from "@/app/_lib/api/fetch-generated";
+import { getHomeData, getUserTrainData } from "@/app/_lib/api/fetch-generated";
 import { Button } from "@/components/ui/button";
 import { WorkoutDayCard } from "@/components/workout-day-card";
 import { BottomNav } from "@/components/bottom-nav";
@@ -32,7 +32,17 @@ export default async function Home() {
   if (!session.data?.user) redirect("/auth");
 
   const today = dayjs();
-  const homeResponse = await getHomeData(today.format("YYYY-MM-DD"));
+  const reqHeaders = await headers();
+
+  const [homeResponse, trainRes] = await Promise.all([
+    getHomeData(today.format("YYYY-MM-DD"), { headers: reqHeaders }),
+    getUserTrainData({ headers: reqHeaders }),
+  ]);
+
+  const hasActivePlan = homeResponse.status === 200;
+  const hasTrainData = trainRes.status === 200 && trainRes.data !== null;
+  if (!hasActivePlan || !hasTrainData) redirect("/onboarding");
+
   const homeData = homeResponse.status === 200 ? homeResponse.data : null;
 
   const userName = session.data.user.name?.split(" ")[0] ?? "Atleta";

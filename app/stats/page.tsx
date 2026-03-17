@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import dayjs from "dayjs";
 import { Clock, CheckCircle, TrendingUp, Flame } from "lucide-react";
 import { authClient } from "@/app/_lib/auth-client";
-import { getStats } from "@/app/_lib/api/fetch-generated";
+import { getStats, getHomeData, getUserTrainData } from "@/app/_lib/api/fetch-generated";
 import { BottomNav } from "@/components/bottom-nav";
 import { StatsHeatmap } from "@/components/stats-heatmap";
 
@@ -27,10 +27,17 @@ export default async function StatsPage() {
   const from = today.subtract(2, "month").startOf("month").format("YYYY-MM-DD");
   const to = today.endOf("month").format("YYYY-MM-DD");
 
-  const statsResponse = await getStats(
-    { from, to },
-    { headers: await headers() },
-  );
+  const reqHeaders = await headers();
+
+  const [homeRes, trainRes, statsResponse] = await Promise.all([
+    getHomeData(today.format("YYYY-MM-DD"), { headers: reqHeaders }),
+    getUserTrainData({ headers: reqHeaders }),
+    getStats({ from, to }, { headers: reqHeaders }),
+  ]);
+
+  const hasActivePlan = homeRes.status === 200;
+  const hasTrainData = trainRes.status === 200 && trainRes.data !== null;
+  if (!hasActivePlan || !hasTrainData) redirect("/onboarding");
 
   const stats = statsResponse.status === 200 ? statsResponse.data : null;
 

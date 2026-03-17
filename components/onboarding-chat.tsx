@@ -5,12 +5,12 @@ import "streamdown/styles.css";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, isTextUIPart } from "ai";
 import { Streamdown } from "streamdown";
-import { parseAsBoolean, parseAsString, useQueryState } from "nuqs";
 import { useEffect, useRef } from "react";
-import { X, Send, Sparkles, Bot } from "lucide-react";
+import { Send, Sparkles, Bot } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -22,21 +22,12 @@ const chatFormSchema = z.object({
 
 type ChatFormValues = z.infer<typeof chatFormSchema>;
 
-export function Chatbot() {
-  const [isOpen, setIsOpen] = useQueryState(
-    "chat_open",
-    parseAsBoolean.withDefault(false),
-  );
-  const [initialMessage, setInitialMessage] = useQueryState(
-    "chat_initial_message",
-    parseAsString,
-  );
-
-  const { messages, setMessages, sendMessage, status } = useChat({
+export function OnboardingChat() {
+  const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
       api: `${process.env.NEXT_PUBLIC_API_URL}/ai`,
       credentials: "include",
-    })
+    }),
   });
 
   const form = useForm<ChatFormValues>({
@@ -46,27 +37,7 @@ export function Chatbot() {
     },
   });
 
-  const sentInitialMessageRef = useRef<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (
-      isOpen &&
-      initialMessage &&
-      sentInitialMessageRef.current !== initialMessage
-    ) {
-      sentInitialMessageRef.current = initialMessage;
-      setMessages([]);
-      sendMessage({ text: initialMessage });
-      setInitialMessage(null);
-    }
-  }, [isOpen, initialMessage]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      sentInitialMessageRef.current = null;
-    }
-  }, [isOpen]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -82,31 +53,21 @@ export function Chatbot() {
   const userMessages = messages.filter((m) => m.role === "user");
 
   return (
-    <div
-      className={cn(
-        "fixed inset-0 z-50 flex flex-col bg-background transition-transform duration-300 ease-in-out",
-        isOpen ? "translate-y-0" : "translate-y-full pointer-events-none",
-      )}
-    >
+    <div className="flex h-svh flex-col bg-background">
       <div className="flex items-center justify-between border-b border-border px-5 pb-4 pt-14">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary shadow-md shadow-primary/30">
             <Sparkles className="h-5 w-5 text-primary-foreground" />
           </div>
           <div>
-            <h2 className="font-black text-foreground">FIT.AI</h2>
+            <h1 className="font-black text-foreground">Coach AI</h1>
             <p className="text-xs text-muted-foreground">
               Personal Trainer Virtual
             </p>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="rounded-full"
-          onClick={() => setIsOpen(false)}
-        >
-          <X className="h-5 w-5" />
+        <Button asChild variant="outline" size="sm" className="rounded-full text-xs font-semibold">
+          <Link href="/">Acessar FIT.AI</Link>
         </Button>
       </div>
 
@@ -118,17 +79,21 @@ export function Chatbot() {
             </div>
             <div className="text-center">
               <p className="font-semibold text-foreground">
-                Como posso te ajudar hoje?
+                Bem-vindo ao FIT.AI 👋
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Escolha uma sugestão ou escreva sua mensagem
+                Vou montar seu plano de treino personalizado, acompanhar sua evolução com estatísticas detalhadas e contar com uma IA disponível 24h para te guiar.
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-2">
               <button
-                onClick={() =>
-                  sendMessage({ text: "Monte meu plano de treino" })
-                }
+                onClick={() => sendMessage({ text: "Vamos configurar meu perfil!" })}
+                className="rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+              >
+                Começar! 🚀
+              </button>
+              <button
+                onClick={() => sendMessage({ text: "Monte meu plano de treino" })}
                 className="rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
               >
                 Monte meu plano de treino
@@ -241,4 +206,3 @@ export function Chatbot() {
     </div>
   );
 }
-
