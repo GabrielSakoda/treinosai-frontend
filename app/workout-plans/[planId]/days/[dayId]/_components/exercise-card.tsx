@@ -1,4 +1,7 @@
+"use client";
+
 import { Info } from "lucide-react";
+import { parseAsBoolean, parseAsString, useQueryState } from "nuqs";
 import { Button } from "@/components/ui/button";
 import { GetWorkoutDay200ExercisesItem } from "@/app/_lib/api/fetch-generated";
 
@@ -8,6 +11,20 @@ interface ExerciseCardProps {
 }
 
 export function ExerciseCard({ exercise, index }: ExerciseCardProps) {
+  const [, setChatOpen] = useQueryState(
+    "chat_open",
+    parseAsBoolean.withDefault(false),
+  );
+  const [, setInitialMessage] = useQueryState(
+    "chat_initial_message",
+    parseAsString,
+  );
+
+  const handleInfoClick = async () => {
+    await setInitialMessage(`Como executar ${exercise.name} corretamente?`);
+    setChatOpen(true);
+  };
+
   return (
     <div className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4">
       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary">
@@ -31,6 +48,7 @@ export function ExerciseCard({ exercise, index }: ExerciseCardProps) {
         variant="ghost"
         size="icon"
         className="shrink-0 text-muted-foreground"
+        onClick={handleInfoClick}
       >
         <Info className="h-5 w-5" />
       </Button>
