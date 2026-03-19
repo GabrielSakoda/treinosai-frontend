@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { GoogleIcon } from "@/components/icons/google-icon";
 import { Button } from "@/components/ui/button";
@@ -16,16 +17,7 @@ export default function AuthPage() {
   }
 
   if (session?.user) {
-    return (
-      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-background px-6">
-        <p className="text-center text-foreground">
-          Você já está logado como <strong>{session.user.name}</strong>
-        </p>
-        <Button asChild>
-          <a href="/">Ir para Home</a>
-        </Button>
-      </div>
-    );
+    redirect("/");
   }
 
   const handleGoogleSignIn = async () => {
