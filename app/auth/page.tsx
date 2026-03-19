@@ -1,26 +1,29 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
 import { GoogleIcon } from "@/components/icons/google-icon";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
-
 export default function AuthPage() {
-  const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
-
-  useEffect(() => {
-    if (session?.user) {
-      router.replace("/");
-    }
-  }, [session, router]);
 
   if (isPending) {
     return (
       <div className="flex min-h-dvh items-center justify-center bg-background">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-foreground" />
+      </div>
+    );
+  }
+
+  if (session?.user) {
+    return (
+      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-background px-6">
+        <p className="text-center text-foreground">
+          Você já está logado como <strong>{session.user.name}</strong>
+        </p>
+        <Button asChild>
+          <a href="/">Ir para Home</a>
+        </Button>
       </div>
     );
   }
