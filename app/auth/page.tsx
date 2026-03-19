@@ -1,88 +1,48 @@
-"use client";
-
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
-import { GoogleIcon } from "@/components/icons/google-icon";
-import { Button } from "@/components/ui/button";
-export default function AuthPage() {
-  const { data: session, isPending } = authClient.useSession();
+import { headers } from "next/headers";
+import { SignInWithGoogle } from "./_components/sign-in-with-google";
 
-  if (isPending) {
-    return (
-      <div className="flex min-h-dvh items-center justify-center bg-background">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-foreground" />
-      </div>
-    );
-  }
+export default async function AuthPage() {
+  const session = await authClient.getSession({
+    fetchOptions: {
+      headers: await headers(),
+    },
+  });
 
-  if (session?.user) {
-    return (
-      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-background px-6">
-        <p className="text-center text-foreground">
-          Você já está logado como <strong>{session.user.name}</strong>
-        </p>
-        <Button asChild>
-          <a href="/">Ir para Home</a>
-        </Button>
-      </div>
-    );
-  }
-
-  const handleGoogleSignIn = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
-    });
-  };
+  if (session.data?.user) redirect("/");
 
   return (
-    <div className="relative flex min-h-dvh flex-col bg-background">
-      {/* Hero Section - Top */}
-      <div className="relative flex-1">
-        {/* Hero Image */}
+    <div className="relative flex min-h-svh flex-col bg-black">
+      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
         <Image
-          src="/fitness-hero.png"
-          alt="Atleta treinando"
+          src="/login-bg.png"
+          alt=""
           fill
-          className="object-cover object-center"
+          className="object-cover"
           priority
         />
-
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-transparent" />
-
-        {/* Logo */}
-        <div className="absolute inset-x-0 top-0 z-10 flex justify-center pt-12">
-          <h1 className="text-4xl font-black tracking-tight text-primary-foreground">
-            FIT.AI
-          </h1>
-        </div>
       </div>
 
-      {/* Bottom Section - Blue CTA */}
-      <div className="relative z-10 -mt-8 rounded-t-[2rem] bg-primary px-6 pb-8 pt-10">
-        <div className="mx-auto flex max-w-sm flex-col items-center gap-8">
-          {/* Tagline */}
-          <h2 className="text-center text-2xl font-bold leading-tight text-primary-foreground">
+      <div className="relative z-10 flex justify-center pt-12">
+        <Image src="/fit-ai-logo.svg" alt="FIT.AI" width={85} height={38} />
+      </div>
+
+      <div className="flex-1" />
+
+      <div className="relative z-10 flex flex-col items-center gap-15 rounded-t-[20px] bg-primary px-5 pb-10 pt-12">
+        <div className="flex w-full flex-col items-center gap-6">
+          <h1 className="w-full text-center font-heading text-[32px] font-semibold leading-[1.05] text-primary-foreground">
             O app que vai transformar a forma como você treina.
-          </h2>
+          </h1>
 
-          {/* Google Sign In Button */}
-          <Button
-            id="google-sign-in-button"
-            onClick={handleGoogleSignIn}
-            variant="outline"
-            className="flex w-full items-center justify-center gap-3 rounded-full bg-background px-6 py-4 text-base font-semibold text-foreground shadow-lg transition-all duration-200 hover:scale-[1.02] hover:bg-background hover:shadow-xl active:scale-[0.98]"
-          >
-            <GoogleIcon className="h-5 w-5 shrink-0" />
-            Fazer login com Google
-          </Button>
-
-          {/* Copyright */}
-          <p className="text-center text-xs text-primary-foreground/70">
-            ©2026 Copyright FIT.AI. Todos os direitos reservados
-          </p>
+          <SignInWithGoogle />
         </div>
+
+        <p className="font-heading text-xs leading-[1.4] text-primary-foreground/70">
+          ©2026 Copyright FIT.AI. Todos os direitos reservados
+        </p>
       </div>
     </div>
   );
