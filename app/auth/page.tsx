@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { authClient } from "@/app/_lib/auth-client";
@@ -15,11 +13,11 @@ export default function AuthPage() {
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-white" />
       </div>
     );
-  }
+  };
 
-  if (session) {
+  if (session?.user) {
     redirect("/");
-  }
+  };
 
   const handleGoogleSignIn = async () => {
     await authClient.signIn.social({
