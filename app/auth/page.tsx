@@ -1,14 +1,23 @@
 "use client";
 
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { authClient } from "@/app/_lib/auth-client";
 import { GoogleIcon } from "@/components/icons/google-icon";
 import { Button } from "@/components/ui/button";
+
 export default function AuthPage() {
   const { data: session, isPending } = authClient.useSession();
+  const router = useRouter();
 
-  if (isPending) {
+  useEffect(() => {
+    if (!isPending && session?.user) {
+      router.replace("/");
+    }
+  }, [isPending, session, router]);
+
+  if (isPending || session?.user) {
     return (
       <div className="flex min-h-dvh items-center justify-center bg-background">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-foreground" />
@@ -16,14 +25,10 @@ export default function AuthPage() {
     );
   }
 
-  if (session?.user) {
-    redirect("/");
-  }
-
   const handleGoogleSignIn = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+      callbackURL: "/",
     });
   };
 
